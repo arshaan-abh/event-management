@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "react-flagpack && next build",
+    "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postinstall": "react-flagpack"
   },
   "dependencies": {
     "@tanstack/react-table": "^8.21.3",
