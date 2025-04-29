@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
-import { cn } from "@/lib/utils";
 import "./globals.css";
+import "react-flagpack/dist/style.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,9 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={cn(geistSans.variable, "font-sans antialiased")}>
-        {children}
-      </body>
+      <body className={geistSans.variable}>{children}</body>
     </html>
   );
 }
