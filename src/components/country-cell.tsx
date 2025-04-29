@@ -1,11 +1,10 @@
+import { Country } from "@/utils/get-country-column";
 import Image from "next/image";
 
-interface CountryCellProps {
-  countryName: string;
-  countryCode: string;
-}
-
-export const CountryCell = ({ countryName, countryCode }: CountryCellProps) => {
+export const CountryCell = ({
+  name: countryName,
+  code: countryCode,
+}: Country) => {
   return (
     <div className="flex items-center gap-1">
       <div>{countryName}</div>

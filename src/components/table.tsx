@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/cn";
 import { ComponentProps } from "react";
 import {
   useReactTable,
@@ -31,36 +31,55 @@ export const Table = <TData extends RowData>({
         <h3 className="font-semibold">{tableTitle}</h3>
       </div>
 
-      <table>
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th key={header.id}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext(),
+      <div className="overflow-x-auto text-sm">
+        <table className="min-w-full">
+          <thead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header, index) => {
+                  const isLast = index === headerGroup.headers.length - 1;
+                  return (
+                    <th
+                      key={header.id}
+                      className={cn(
+                        "relative truncate border-b-2 border-gray-200 bg-zinc-100 px-4 py-2 text-start",
+                        index === 0 && "rounded-tl-2xl",
+                        isLast && "rounded-tr-2xl",
                       )}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
+                    >
+                      {!isLast && (
+                        <div className="absolute inset-y-0 right-0 my-auto h-6 w-[2px] rounded-full bg-gray-200" />
+                      )}
 
-        <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
+                    </th>
+                  );
+                })}
+              </tr>
+            ))}
+          </thead>
+
+          <tbody>
+            {table.getRowModel().rows.map((row) => (
+              <tr key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <td
+                    key={cell.id}
+                    className="truncate border-b-2 border-zinc-100 px-4 py-2"
+                  >
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

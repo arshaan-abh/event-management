@@ -1,6 +1,6 @@
 "use client";
 
-import { CountryCell } from "@/components/country-cell";
+import { layTimeColumns } from "@/consts/lay-time-columns";
 import { Table } from "@/components/table";
 import { layTimes } from "@/consts/lay-times";
 import { getCoreRowModel } from "@tanstack/react-table";
@@ -11,12 +11,7 @@ export default function Home() {
       <Table
         tableTitle="Lay Times"
         options={{
-          columns: [
-            {
-              header: "Port Name",
-              cell: ({ row }) => <CountryCell {...row.original.portName} />,
-            },
-          ],
+          columns: layTimeColumns,
           data: layTimes,
           getCoreRowModel: getCoreRowModel(),
         }}

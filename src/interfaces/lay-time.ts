@@ -1,5 +1,8 @@
+import { Country } from "@/utils/get-country-column";
+import { TimeDiff } from "@/utils/get-time-diff-column";
+
 export interface LayTime {
-  portName: { countryName: string; countryCode: string };
+  portName: Country;
   cargo: string;
   f: string;
   blCode: string;
@@ -9,9 +12,9 @@ export interface LayTime {
   demRate: number;
   desRateD: number;
   allowed: number;
-  used: { from: string; to: string };
-  deduction: { from: string; to: string };
-  balance: { from: string; to: string };
+  used: TimeDiff;
+  deduction: TimeDiff;
+  balance: TimeDiff;
   laycanFrom: string;
   laycanTo: string;
   items: PortActivity[];

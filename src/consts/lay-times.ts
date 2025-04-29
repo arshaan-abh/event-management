@@ -2,7 +2,7 @@ import { LayTime, PortActivityType } from "@/interfaces/lay-time";
 
 export const layTimes: LayTime[] = [
   {
-    portName: { countryName: "USA", countryCode: "US" },
+    portName: { name: "USA", code: "US" },
     cargo: "Crude Oil",
     f: "FOB",
     blCode: "BL001",
@@ -45,7 +45,7 @@ export const layTimes: LayTime[] = [
     ],
   },
   {
-    portName: { countryName: "Brazil", countryCode: "BR" },
+    portName: { name: "Brazil", code: "BR" },
     cargo: "Soybeans",
     f: "CIF",
     blCode: "BL002",
@@ -88,7 +88,7 @@ export const layTimes: LayTime[] = [
     ],
   },
   {
-    portName: { countryName: "Singapore", countryCode: "SG" },
+    portName: { name: "Singapore", code: "SG" },
     cargo: "Chemicals",
     f: "FOB",
     blCode: "BL003",
