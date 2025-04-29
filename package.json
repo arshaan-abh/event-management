@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "react-flagpack"
+    "postbuild": "react-flagpack"
   },
   "dependencies": {
     "@tanstack/react-table": "^8.21.3",
