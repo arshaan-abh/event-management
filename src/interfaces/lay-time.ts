@@ -20,7 +20,7 @@ export interface LayTime {
   items: PortActivity[];
 }
 
-interface PortActivity {
+export interface PortActivity {
   activityType: PortActivityType;
   fromDateAndTime: string;
   percentage: 0 | 50 | 100;

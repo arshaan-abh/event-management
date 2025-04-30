@@ -6,6 +6,7 @@ import {
   TableOptions,
   flexRender,
 } from "@tanstack/react-table";
+import { Inbox } from "lucide-react";
 
 interface TableProps<TData extends RowData> extends ComponentProps<"div"> {
   tableTitle: string;
@@ -84,6 +85,21 @@ export const Table = <TData extends RowData>({
                 ))}
               </tr>
             ))}
+
+            {table.getRowModel().rows.length === 0 && (
+              <tr>
+                <td colSpan={table.getAllColumns().length}>
+                  <div className="flex flex-col items-center py-8">
+                    <Inbox
+                      className="text-zinc-300"
+                      size={64}
+                      strokeWidth={1}
+                    />
+                    <div className="text-neutral-400">No data</div>
+                  </div>
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
