@@ -2,6 +2,7 @@ import { Country } from "@/utils/get-country-column";
 import { TimeDiff } from "@/utils/get-time-diff-column";
 
 export interface LayTime {
+  id: number;
   portName: Country;
   cargo: string;
   f: string;
@@ -21,6 +22,7 @@ export interface LayTime {
 }
 
 export interface PortActivity {
+  id: number;
   activityType: PortActivityType;
   fromDateAndTime: string;
   percentage: 0 | 50 | 100;

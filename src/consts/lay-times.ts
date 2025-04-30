@@ -2,6 +2,7 @@ import { LayTime, PortActivityType } from "@/interfaces/lay-time";
 
 export const layTimes: LayTime[] = [
   {
+    id: 0,
     portName: { name: "USA", code: "US" },
     cargo: "Crude Oil",
     f: "FOB",
@@ -19,24 +20,28 @@ export const layTimes: LayTime[] = [
     laycanTo: "2025-04-05T00:00:00Z",
     items: [
       {
+        id: 0,
         activityType: PortActivityType.Berthing,
         fromDateAndTime: "2025-04-01T01:00:00Z",
         percentage: 100,
         remarks: "Berthing completed",
       },
       {
+        id: 1,
         activityType: PortActivityType.Loading,
         fromDateAndTime: "2025-04-01T04:00:00Z",
         percentage: 50,
         remarks: "Half cargo loaded",
       },
       {
+        id: 2,
         activityType: PortActivityType.Loading,
         fromDateAndTime: "2025-04-02T06:00:00Z",
         percentage: 100,
         remarks: "Loading completed",
       },
       {
+        id: 3,
         activityType: PortActivityType.Unberthing,
         fromDateAndTime: "2025-04-02T08:00:00Z",
         percentage: 100,
@@ -45,6 +50,7 @@ export const layTimes: LayTime[] = [
     ],
   },
   {
+    id: 1,
     portName: { name: "Brazil", code: "BR" },
     cargo: "Soybeans",
     f: "CIF",
@@ -62,24 +68,28 @@ export const layTimes: LayTime[] = [
     laycanTo: "2025-05-12T00:00:00Z",
     items: [
       {
+        id: 0,
         activityType: PortActivityType.Waiting,
         fromDateAndTime: "2025-05-10T01:00:00Z",
         percentage: 0,
         remarks: "Waiting at anchorage",
       },
       {
+        id: 1,
         activityType: PortActivityType.Berthing,
         fromDateAndTime: "2025-05-10T10:00:00Z",
         percentage: 100,
         remarks: "Berthing completed",
       },
       {
+        id: 2,
         activityType: PortActivityType.Loading,
         fromDateAndTime: "2025-05-11T02:00:00Z",
         percentage: 50,
         remarks: "Partial loading",
       },
       {
+        id: 3,
         activityType: PortActivityType.Loading,
         fromDateAndTime: "2025-05-12T03:00:00Z",
         percentage: 100,
@@ -88,6 +98,7 @@ export const layTimes: LayTime[] = [
     ],
   },
   {
+    id: 2,
     portName: { name: "Singapore", code: "SG" },
     cargo: "Chemicals",
     f: "FOB",
@@ -105,24 +116,28 @@ export const layTimes: LayTime[] = [
     laycanTo: "2025-06-03T00:00:00Z",
     items: [
       {
+        id: 0,
         activityType: PortActivityType.Berthing,
         fromDateAndTime: "2025-06-01T02:00:00Z",
         percentage: 100,
         remarks: "Berth occupied",
       },
       {
+        id: 1,
         activityType: PortActivityType.Inspection,
         fromDateAndTime: "2025-06-01T06:00:00Z",
         percentage: 100,
         remarks: "Pre-loading inspection",
       },
       {
+        id: 2,
         activityType: PortActivityType.Loading,
         fromDateAndTime: "2025-06-01T08:00:00Z",
         percentage: 50,
         remarks: "Started loading",
       },
       {
+        id: 3,
         activityType: PortActivityType.Loading,
         fromDateAndTime: "2025-06-02T09:00:00Z",
         percentage: 100,
