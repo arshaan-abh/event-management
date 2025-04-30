@@ -15,7 +15,7 @@ interface EditableDateAndTimeColumnProps<TData extends RowData> {
   accessorKey: keyof TData;
 }
 
-interface UneditableDateAndTimeColumnProps<TData extends RowData> {
+interface UneditableDateAndTimeColumnProps {
   editable?: false;
 }
 
@@ -24,7 +24,7 @@ type GetDateAndTimeColumnProps = <TData extends RowData>(
     generateDateAndTime: (props: TData) => string;
   } & (
     | EditableDateAndTimeColumnProps<TData>
-    | UneditableDateAndTimeColumnProps<TData>
+    | UneditableDateAndTimeColumnProps
   ) &
     ColumnDef<TData>,
 ) => ColumnDef<TData>;
