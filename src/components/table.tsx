@@ -43,8 +43,8 @@ export const Table = <TData extends RowData>({
                       key={header.id}
                       className={cn(
                         "relative truncate border-b-2 border-gray-200 bg-zinc-100 px-4 py-2 text-start",
-                        index === 0 && "rounded-tl-2xl",
-                        isLast && "rounded-tr-2xl",
+                        index === 0 && "rounded-tl-lg",
+                        isLast && "rounded-tr-lg",
                       )}
                     >
                       {!isLast && (
@@ -66,7 +66,14 @@ export const Table = <TData extends RowData>({
 
           <tbody>
             {table.getRowModel().rows.map((row) => (
-              <tr key={row.id}>
+              <tr
+                key={row.id}
+                onClick={row.getToggleSelectedHandler()}
+                className={cn(
+                  row.getIsSelected() && "bg-indigo-50",
+                  row.getCanSelect() && "cursor-pointer",
+                )}
+              >
                 {row.getVisibleCells().map((cell) => (
                   <td
                     key={cell.id}
