@@ -25,7 +25,7 @@ export interface PortActivity {
   id: number;
   activityType: PortActivityType;
   fromDateAndTime: string;
-  percentage: 0 | 50 | 100;
+  percentage: PortActivityPercentage;
   remarks: string;
 }
 
@@ -39,4 +39,10 @@ export enum PortActivityType {
   Inspection = "Inspection",
   Bunkering = "Bunkering",
   Maintenance = "Maintenance",
+}
+
+export enum PortActivityPercentage {
+  P0 = 0,
+  P50 = 50,
+  P100 = 100,
 }

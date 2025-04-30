@@ -29,7 +29,6 @@ export const SelectCell: FC<SelectCellProps> = ({
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          <SelectLabel>Activity Types</SelectLabel>
           {uniqueOptions.map((option) => (
             <SelectItem key={option} value={option}>
               {option}
