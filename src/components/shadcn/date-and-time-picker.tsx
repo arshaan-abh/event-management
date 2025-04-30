@@ -1,10 +1,5 @@
 "use client";
 
-import * as React from "react";
-import { CalendarDays } from "lucide-react";
-import { format } from "date-fns";
-
-import { cn } from "@/utils/cn";
 import { Button } from "@/components/shadcn/button";
 import { Calendar } from "@/components/shadcn/calendar";
 import {
@@ -13,70 +8,73 @@ import {
   PopoverTrigger,
 } from "@/components/shadcn/popover";
 import { ScrollArea, ScrollBar } from "@/components/shadcn/scroll-area";
+import { DateAndTime } from "@/utils/get-date-and-time-column";
+import { formatDateAndTime } from "@/utils/format-date-and-time";
+import { FC, useCallback, useState } from "react";
 
-export function DateTimePicker24h() {
-  const [date, setDate] = React.useState<Date>();
-  const [isOpen, setIsOpen] = React.useState(false);
+interface DateAndTimePickerProps {
+  value: string;
+  onChange: (props: string) => void;
+  field: FC<DateAndTime>;
+}
 
-  const hours = Array.from({ length: 24 }, (_, i) => i);
-  const handleDateSelect = (selectedDate: Date | undefined) => {
-    if (selectedDate) {
-      setDate(selectedDate);
-    }
-  };
+export const DateAndTimePicker: FC<DateAndTimePickerProps> = ({
+  value,
+  onChange,
+  field: Field,
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
 
-  const handleTimeChange = (type: "hour" | "minute", value: string) => {
-    if (date) {
-      const newDate = new Date(date);
-      if (type === "hour") {
-        newDate.setHours(parseInt(value));
-      } else if (type === "minute") {
-        newDate.setMinutes(parseInt(value));
-      }
-      setDate(newDate);
-    }
-  };
+  const handleDateChange = useCallback(
+    (newDate: Date | undefined) => {
+      if (!newDate) return;
+      const date = new Date(value);
+      date.setFullYear(newDate.getFullYear());
+      date.setMonth(newDate.getMonth());
+      date.setDate(newDate.getDate());
+      onChange(date.toISOString());
+    },
+    [value, onChange],
+  );
+
+  const handleTimeChange = useCallback(
+    (type: "hour" | "minute" | "second", newTime: number) => {
+      const date = new Date(value);
+      if (type === "hour") date.setHours(newTime);
+      else if (type === "minute") date.setMinutes(newTime);
+      else if (type === "second") date.setSeconds(newTime);
+      onChange(date.toISOString());
+    },
+    [value, onChange],
+  );
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          className={cn(
-            "w-full justify-start text-left font-normal",
-            !date && "text-muted-foreground",
-          )}
-        >
-          <CalendarDays className="mr-2 h-4 w-4" />
-          {date ? (
-            format(date, "MM/dd/yyyy hh:mm")
-          ) : (
-            <span>MM/DD/YYYY hh:mm</span>
-          )}
-        </Button>
+      <PopoverTrigger className="w-[180px] cursor-pointer outline-none">
+        <Field {...formatDateAndTime(value)} />
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0">
+      <PopoverContent align="start" className="w-auto p-0">
         <div className="sm:flex">
           <Calendar
             mode="single"
-            selected={date}
-            onSelect={handleDateSelect}
+            selected={new Date(value)}
+            onSelect={handleDateChange}
             initialFocus
           />
           <div className="flex flex-col divide-y sm:h-[300px] sm:flex-row sm:divide-x sm:divide-y-0">
             <ScrollArea className="w-64 sm:w-auto">
               <div className="flex p-2 sm:flex-col">
-                {hours.reverse().map((hour) => (
+                {Array.from({ length: 24 }, (_, i) => i).map((hour) => (
                   <Button
                     key={hour}
                     size="icon"
                     variant={
-                      date && date.getHours() === hour ? "default" : "ghost"
+                      new Date(value).getHours() === hour ? "default" : "ghost"
                     }
                     className="aspect-square shrink-0 sm:w-full"
-                    onClick={() => handleTimeChange("hour", hour.toString())}
+                    onClick={() => handleTimeChange("hour", hour)}
                   >
-                    {hour}
+                    {hour.toString().padStart(2, "0")}
                   </Button>
                 ))}
               </div>
@@ -84,19 +82,39 @@ export function DateTimePicker24h() {
             </ScrollArea>
             <ScrollArea className="w-64 sm:w-auto">
               <div className="flex p-2 sm:flex-col">
-                {Array.from({ length: 12 }, (_, i) => i * 5).map((minute) => (
+                {Array.from({ length: 60 }, (_, i) => i).map((minute) => (
                   <Button
                     key={minute}
                     size="icon"
                     variant={
-                      date && date.getMinutes() === minute ? "default" : "ghost"
+                      new Date(value).getMinutes() === minute
+                        ? "default"
+                        : "ghost"
                     }
                     className="aspect-square shrink-0 sm:w-full"
-                    onClick={() =>
-                      handleTimeChange("minute", minute.toString())
-                    }
+                    onClick={() => handleTimeChange("minute", minute)}
                   >
                     {minute.toString().padStart(2, "0")}
+                  </Button>
+                ))}
+              </div>
+              <ScrollBar orientation="horizontal" className="sm:hidden" />
+            </ScrollArea>
+            <ScrollArea className="w-64 sm:w-auto">
+              <div className="flex p-2 sm:flex-col">
+                {Array.from({ length: 60 }, (_, i) => i).map((second) => (
+                  <Button
+                    key={second}
+                    size="icon"
+                    variant={
+                      new Date(value).getSeconds() === second
+                        ? "default"
+                        : "ghost"
+                    }
+                    className="aspect-square shrink-0 sm:w-full"
+                    onClick={() => handleTimeChange("second", second)}
+                  >
+                    {second.toString().padStart(2, "0")}
                   </Button>
                 ))}
               </div>
@@ -107,4 +125,4 @@ export function DateTimePicker24h() {
       </PopoverContent>
     </Popover>
   );
-}
+};

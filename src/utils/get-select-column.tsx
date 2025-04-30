@@ -9,21 +9,24 @@ export interface UpdateDataProps {
 }
 
 export const getSelectColumn: <TData extends RowData>(
-  props: Omit<ColumnDef<TData>, "accessorKey"> & { accessorKey: keyof TData },
-) => ColumnDef<TData> = (columnDef) => ({
-  cell: ({ row, table }) => {
-    const value = row.original[columnDef.accessorKey];
+  props: {
+    generateValue: (props: TData) => string;
+    accessorKey: keyof TData;
+  } & ColumnDef<TData>,
+) => ColumnDef<TData> = ({ generateValue, ...columnDef }) => ({
+  cell: ({ row, column, table }) => {
+    const value = generateValue(row.original);
     const meta = table.options.meta as {
       updateData: (props: UpdateDataProps) => void;
     };
     return (
       <SelectCell
-        value={value as string} // TODO make this typesafe
+        value={value}
         options={Object.values(PortActivityType)}
         onChange={(value) =>
           meta.updateData({
             rowIndex: row.index,
-            columnId: "activityType",
+            columnId: column.id,
             value,
           })
         }
