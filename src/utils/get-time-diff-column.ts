@@ -9,10 +9,9 @@ export interface TimeDiff {
 export const getTimeDiffColumn: <TData extends RowData>(
   props: { generateTimeDiff: (prop: TData) => TimeDiff } & ColumnDef<TData>,
 ) => ColumnDef<TData> = ({ generateTimeDiff, ...columnDef }) => ({
-  cell: ({ row }) =>
-    formatTimeDiff(
-      generateTimeDiff(row.original).from,
-      generateTimeDiff(row.original).to,
-    ),
+  cell: ({ row }) => {
+    const timeDiff = generateTimeDiff(row.original);
+    return formatTimeDiff(timeDiff.from, timeDiff.to);
+  },
   ...columnDef,
 });

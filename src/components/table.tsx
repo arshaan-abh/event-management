@@ -70,7 +70,7 @@ export const Table = <TData extends RowData>({
                 {row.getVisibleCells().map((cell) => (
                   <td
                     key={cell.id}
-                    className="truncate border-b-2 border-zinc-100 px-4 py-2"
+                    className="h-[2.375rem] truncate border-b-2 border-zinc-100 px-4"
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>

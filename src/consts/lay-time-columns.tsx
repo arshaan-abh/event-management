@@ -1,5 +1,6 @@
 import { LayTime } from "@/interfaces/lay-time";
 import { getCountryColumn } from "@/utils/get-country-column";
+import { getDateAndTimeColumn } from "@/utils/get-date-and-time-column";
 import { getNumberColumn } from "@/utils/get-number-column";
 import { getTimeDiffColumn } from "@/utils/get-time-diff-column";
 import { ColumnDef } from "@tanstack/react-table";
@@ -57,12 +58,12 @@ export const layTimeColumns: ColumnDef<LayTime>[] = [
     generateTimeDiff: ({ balance }) => balance,
     header: "Balance",
   }),
-  {
+  getDateAndTimeColumn({
+    generateDateAndTime: ({ laycanFrom }) => laycanFrom,
     header: "Laycan From",
-    cell: ({ row }) => row.original.laycanFrom,
-  },
-  {
+  }),
+  getDateAndTimeColumn({
+    generateDateAndTime: ({ laycanTo }) => laycanTo,
     header: "Laycan To",
-    cell: ({ row }) => row.original.laycanTo,
-  },
+  }),
 ];
