@@ -22,10 +22,11 @@ export const formatDateAndTime = (utcString: string): DateAndTime => {
   // Format time as "DDD, HH:MM"
   const hours = String(date.getHours()).padStart(2, "0");
   const minutes = String(date.getMinutes()).padStart(2, "0");
-  const formattedTime = `${dayOfWeek}, ${hours}:${minutes}`;
+  const formattedTime = `${hours}:${minutes}`;
 
   return {
     date: formattedDate,
     time: formattedTime,
+    day: dayOfWeek,
   };
 };

@@ -5,6 +5,7 @@ import { DateAndTimeCell } from "@/components/date-and-time-cell";
 export interface DateAndTime {
   date: string;
   time: string;
+  day: string;
 }
 
 export const getDateAndTimeColumn: <TData extends RowData>(
