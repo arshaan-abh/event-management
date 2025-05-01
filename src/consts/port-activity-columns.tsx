@@ -1,8 +1,4 @@
-import {
-  PortActivity,
-  PortActivityPercentage,
-  PortActivityType,
-} from "@/interfaces/lay-time";
+import { PortActivity, PortActivityType } from "@/interfaces/lay-time";
 import { formatDateAndTime } from "@/utils/format-date-and-time";
 import { getSelectColumn } from "@/utils/get-select-column";
 import { getDateAndTimeColumn } from "@/utils/get-date-and-time-column";
@@ -37,9 +33,7 @@ export const portActivityColumns: ColumnDef<PortActivity>[] = [
     generateValue: ({ percentage }) => percentage.toString(),
     header: "%",
     accessorKey: "percentage",
-    options: Object.values(PortActivityPercentage).map((percentage) =>
-      percentage.toString(),
-    ),
+    options: ["0", "50", "100"],
   }),
   getDateAndTimeColumn({
     generateDateAndTime: ({ fromDateAndTime }) => fromDateAndTime,
