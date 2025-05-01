@@ -23,7 +23,7 @@ export const SelectCell: FC<SelectCellProps> = ({
   const uniqueOptions = useMemo(() => dedupe(options), []);
   return (
     <Select value={value} defaultValue={options[0]} onValueChange={onChange}>
-      <SelectTrigger className="w-[180px] rounded-none border-none p-0 shadow-none !ring-0">
+      <SelectTrigger className="w-full rounded-none border-none p-0 shadow-none !ring-0">
         <SelectValue />
       </SelectTrigger>
       <SelectContent>

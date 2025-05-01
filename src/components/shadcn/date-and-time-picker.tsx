@@ -50,7 +50,7 @@ export const DateAndTimePicker: FC<DateAndTimePickerProps> = ({
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
-      <PopoverTrigger className="w-[180px] cursor-pointer outline-none">
+      <PopoverTrigger className="size-full cursor-pointer outline-none">
         <Field {...formatDateAndTime(value)} />
       </PopoverTrigger>
       <PopoverContent align="start" className="w-auto p-0">

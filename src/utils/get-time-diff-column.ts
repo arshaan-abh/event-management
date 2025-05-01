@@ -1,4 +1,4 @@
-import { ColumnDef, RowData } from "@tanstack/react-table";
+import { CellContext, ColumnDef, RowData } from "@tanstack/react-table";
 import { formatTimeDiff } from "./format-time-diff";
 
 export interface TimeDiff {
@@ -7,10 +7,12 @@ export interface TimeDiff {
 }
 
 export const getTimeDiffColumn: <TData extends RowData>(
-  props: { generateTimeDiff: (prop: TData) => TimeDiff } & ColumnDef<TData>,
+  props: {
+    generateTimeDiff: (cellContext: CellContext<TData, unknown>) => TimeDiff;
+  } & ColumnDef<TData>,
 ) => ColumnDef<TData> = ({ generateTimeDiff, ...columnDef }) => ({
-  cell: ({ row }) => {
-    const timeDiff = generateTimeDiff(row.original);
+  cell: (cellContext) => {
+    const timeDiff = generateTimeDiff(cellContext);
     return formatTimeDiff(timeDiff.from, timeDiff.to);
   },
   ...columnDef,

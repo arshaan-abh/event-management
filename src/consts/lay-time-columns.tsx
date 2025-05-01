@@ -47,15 +47,15 @@ export const layTimeColumns: ColumnDef<LayTime>[] = [
     header: "Allowed",
   }),
   getTimeDiffColumn({
-    generateTimeDiff: ({ used }) => used,
+    generateTimeDiff: ({ row }) => row.original.used,
     header: "Used",
   }),
   getTimeDiffColumn({
-    generateTimeDiff: ({ deduction }) => deduction,
+    generateTimeDiff: ({ row }) => row.original.deduction,
     header: "Deduction",
   }),
   getTimeDiffColumn({
-    generateTimeDiff: ({ balance }) => balance,
+    generateTimeDiff: ({ row }) => row.original.balance,
     header: "Balance",
   }),
   getDateAndTimeColumn({

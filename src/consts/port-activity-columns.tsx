@@ -2,8 +2,24 @@ import { PortActivity, PortActivityType } from "@/interfaces/lay-time";
 import { formatDateAndTime } from "@/utils/format-date-and-time";
 import { getSelectColumn } from "@/utils/get-select-column";
 import { getDateAndTimeColumn } from "@/utils/get-date-and-time-column";
-import { ColumnDef } from "@tanstack/react-table";
-import { getTimeDiffColumn } from "@/utils/get-time-diff-column";
+import { CellContext, ColumnDef } from "@tanstack/react-table";
+import { getTimeDiffColumn, TimeDiff } from "@/utils/get-time-diff-column";
+import { applyPercentageToTimeDiff } from "@/utils/apply-percentage-to-time-diff";
+import { formatTimeDiff } from "@/utils/format-time-diff";
+
+const calculateDuration: (
+  cellContext: CellContext<PortActivity, unknown>,
+) => TimeDiff = ({ row, table }) => {
+  const sortedRows = table.getRowModel().rows;
+  const currentRowIndex = sortedRows.findIndex((r) => r.id === row.id);
+  const nextRow = sortedRows[currentRowIndex + 1];
+  const nextValue = nextRow?.original?.fromDateAndTime;
+  const currentValue = row.original.fromDateAndTime;
+  return {
+    from: currentValue,
+    to: nextValue ?? currentValue,
+  };
+};
 
 export const portActivityColumns: ColumnDef<PortActivity>[] = [
   {
@@ -21,12 +37,14 @@ export const portActivityColumns: ColumnDef<PortActivity>[] = [
     header: "From Date & Time",
     accessorKey: "fromDateAndTime",
     editable: true,
+    sortingFn: (rowA, rowB, columnId) => {
+      const a = new Date(rowA.getValue(columnId)).getTime();
+      const b = new Date(rowB.getValue(columnId)).getTime();
+      return b - a;
+    },
   }),
   getTimeDiffColumn({
-    generateTimeDiff: ({ fromDateAndTime }) => ({
-      from: fromDateAndTime,
-      to: fromDateAndTime,
-    }),
+    generateTimeDiff: calculateDuration,
     header: "Duration",
   }),
   getSelectColumn({
@@ -46,6 +64,12 @@ export const portActivityColumns: ColumnDef<PortActivity>[] = [
   },
   {
     header: "Deductions",
-    accessorKey: "deductions",
+    cell: (cellContext) => {
+      const duration = calculateDuration(cellContext);
+      return applyPercentageToTimeDiff(
+        formatTimeDiff(duration.from, duration.to),
+        cellContext.row.original.percentage,
+      );
+    },
   },
 ];
