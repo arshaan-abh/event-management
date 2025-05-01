@@ -52,6 +52,7 @@ export const portActivityColumns: ColumnDef<PortActivity>[] = [
     header: "%",
     accessorKey: "percentage",
     options: ["0", "50", "100"],
+    renderOption: (percentage) => `${percentage}%`,
   }),
   getDateAndTimeColumn({
     generateDateAndTime: ({ fromDateAndTime }) => fromDateAndTime,
