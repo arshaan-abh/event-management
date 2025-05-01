@@ -23,6 +23,7 @@ export const getSelectColumn: <TData extends RowData>(
       <SelectCell
         value={value}
         options={options}
+        renderOption={(percentage) => `${percentage}%`}
         onChange={(value) =>
           meta.updateData({
             rowIndex: row.index,

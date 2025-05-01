@@ -7,18 +7,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./shadcn/select";
-import { FC, useMemo } from "react";
+import { FC, ReactNode, useMemo } from "react";
 
 interface SelectCellProps {
   value: string;
   onChange: (value: string) => void;
   options: string[];
+  renderOption?: (option: string) => ReactNode;
 }
 
 export const SelectCell: FC<SelectCellProps> = ({
   value,
   onChange,
   options,
+  renderOption,
 }) => {
   const uniqueOptions = useMemo(() => dedupe(options), []);
   return (
@@ -30,7 +32,7 @@ export const SelectCell: FC<SelectCellProps> = ({
         <SelectGroup>
           {uniqueOptions.map((option) => (
             <SelectItem key={option} value={option}>
-              {option}
+              {renderOption ? renderOption(option) : option}
             </SelectItem>
           ))}
         </SelectGroup>
