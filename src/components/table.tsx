@@ -89,7 +89,7 @@ export const Table = <TData extends RowData>({
             {table.getRowModel().rows.length === 0 && (
               <tr>
                 <td colSpan={table.getAllColumns().length}>
-                  <div className="flex flex-col items-center py-8">
+                  <div className="pointer-events-none absolute inset-x-0 flex h-36 flex-col items-center justify-center">
                     <Inbox
                       className="text-zinc-300"
                       size={64}
@@ -97,6 +97,7 @@ export const Table = <TData extends RowData>({
                     />
                     <div className="text-neutral-400">No data</div>
                   </div>
+                  <div className="h-36" />
                 </td>
               </tr>
             )}

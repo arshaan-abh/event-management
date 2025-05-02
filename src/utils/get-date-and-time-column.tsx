@@ -1,4 +1,4 @@
-import { ColumnDef, RowData } from "@tanstack/react-table";
+import { CellContext, ColumnDef, RowData } from "@tanstack/react-table";
 import { formatDateAndTime } from "./format-date-and-time";
 import { DateAndTimeCell } from "@/components/date-and-time-cell";
 import { DateAndTimePicker } from "@/components/shadcn/date-and-time-picker";
@@ -21,7 +21,7 @@ interface UneditableDateAndTimeColumnProps {
 
 type GetDateAndTimeColumnProps = <TData extends RowData>(
   props: {
-    generateDateAndTime: (props: TData) => string;
+    generateDateAndTime: (cellContext: CellContext<TData, unknown>) => string;
   } & (
     | EditableDateAndTimeColumnProps<TData>
     | UneditableDateAndTimeColumnProps
@@ -34,8 +34,13 @@ export const getDateAndTimeColumn: GetDateAndTimeColumnProps = ({
   editable,
   ...columnDef
 }) => ({
-  cell: ({ row, column, table }) => {
-    const dateAndTime = generateDateAndTime(row.original);
+  cell: ({ row, column, table, ...celContext }) => {
+    const dateAndTime = generateDateAndTime({
+      row,
+      column,
+      table,
+      ...celContext,
+    });
     const meta = table.options.meta as {
       updateData: (props: UpdateDataProps) => void;
     };

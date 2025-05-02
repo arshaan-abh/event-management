@@ -59,11 +59,11 @@ export const layTimeColumns: ColumnDef<LayTime>[] = [
     header: "Balance",
   }),
   getDateAndTimeColumn({
-    generateDateAndTime: ({ laycanFrom }) => laycanFrom,
+    generateDateAndTime: ({ row }) => row.original.laycanFrom,
     header: "Laycan From",
   }),
   getDateAndTimeColumn({
-    generateDateAndTime: ({ laycanTo }) => laycanTo,
+    generateDateAndTime: ({ row }) => row.original.laycanTo,
     header: "Laycan To",
   }),
 ];

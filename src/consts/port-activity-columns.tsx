@@ -7,14 +7,21 @@ import { getTimeDiffColumn, TimeDiff } from "@/utils/get-time-diff-column";
 import { applyPercentageToTimeDiff } from "@/utils/apply-percentage-to-time-diff";
 import { formatTimeDiff } from "@/utils/format-time-diff";
 
-const calculateDuration: (
+const getCurrentAndNextRowsValues: (
   cellContext: CellContext<PortActivity, unknown>,
-) => TimeDiff = ({ row, table }) => {
+) => { currentValue: string; nextValue: string } = ({ row, table }) => {
   const sortedRows = table.getRowModel().rows;
   const currentRowIndex = sortedRows.findIndex((r) => r.id === row.id);
   const nextRow = sortedRows[currentRowIndex + 1];
   const nextValue = nextRow?.original?.fromDateAndTime;
   const currentValue = row.original.fromDateAndTime;
+  return { currentValue, nextValue };
+};
+
+const calculateDuration: (
+  cellContext: CellContext<PortActivity, unknown>,
+) => TimeDiff = (cellContext) => {
+  const { currentValue, nextValue } = getCurrentAndNextRowsValues(cellContext);
   return {
     from: currentValue,
     to: nextValue ?? currentValue,
@@ -33,7 +40,7 @@ export const portActivityColumns: ColumnDef<PortActivity>[] = [
     options: Object.values(PortActivityType),
   }),
   getDateAndTimeColumn({
-    generateDateAndTime: ({ fromDateAndTime }) => fromDateAndTime,
+    generateDateAndTime: ({ row }) => row.original.fromDateAndTime,
     header: "From Date & Time",
     accessorKey: "fromDateAndTime",
     editable: true,
@@ -55,7 +62,11 @@ export const portActivityColumns: ColumnDef<PortActivity>[] = [
     renderOption: (percentage) => `${percentage}%`,
   }),
   getDateAndTimeColumn({
-    generateDateAndTime: ({ fromDateAndTime }) => fromDateAndTime,
+    generateDateAndTime: (cellContext) => {
+      const { currentValue, nextValue } =
+        getCurrentAndNextRowsValues(cellContext);
+      return nextValue ?? currentValue;
+    },
     header: "To Date & Time",
     accessorKey: "toDateAndTime",
   }),
