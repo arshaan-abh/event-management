@@ -15,7 +15,7 @@ import { usePersistentState } from "@/hooks/use-persistent-state";
 import { UpdateDataProps } from "@/utils/get-select-column";
 import { LayTime, PortActivity, PortActivityType } from "@/interfaces/lay-time";
 import { formatDateAndTime } from "@/utils/format-date-and-time";
-import { DeleteDataProps } from "@/components/actions-cell";
+import { CopyDataProps, DeleteDataProps } from "@/components/actions-cell";
 
 const addEmptyPortActivityItem = (
   oldLayTimes: LayTime[],
@@ -113,6 +113,35 @@ export default function Home() {
                         ? { ...item, [columnId]: value }
                         : item,
                     );
+                    return {
+                      ...oldLayTime,
+                      items: updatedItems,
+                    };
+                  }
+                  return oldLayTime;
+                }),
+              ),
+            copyData: ({ rowIndex }: CopyDataProps) =>
+              setLayTimes((oldLayTimes) =>
+                oldLayTimes.map((oldLayTime) => {
+                  if (oldLayTime.id === selectedLayTime?.id) {
+                    const itemToCopy = oldLayTime.items[rowIndex];
+                    if (!itemToCopy) return oldLayTime;
+
+                    const copiedItem = {
+                      ...itemToCopy,
+                      remarks: `${itemToCopy.remarks} (Copied)`,
+                    };
+
+                    const updatedItems = [
+                      ...oldLayTime.items.slice(0, rowIndex + 1),
+                      copiedItem,
+                      ...oldLayTime.items.slice(rowIndex + 1),
+                    ].map((item, index) => ({
+                      ...item,
+                      id: index,
+                    }));
+
                     return {
                       ...oldLayTime,
                       items: updatedItems,
