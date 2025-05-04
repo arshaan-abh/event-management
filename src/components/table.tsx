@@ -6,16 +6,19 @@ import {
   TableOptions,
   flexRender,
 } from "@tanstack/react-table";
-import { Inbox } from "lucide-react";
+import { Inbox, Plus } from "lucide-react";
+import { Button } from "./shadcn/button";
 
 interface TableProps<TData extends RowData> extends ComponentProps<"div"> {
   tableTitle: string;
   options: TableOptions<TData>;
+  onAddNewRow?: () => void;
 }
 
 export const Table = <TData extends RowData>({
   tableTitle,
   options,
+  onAddNewRow,
 
   className,
   ...otherProps
@@ -27,9 +30,18 @@ export const Table = <TData extends RowData>({
       className={cn("rounded-lg bg-white p-4 shadow", className)}
       {...otherProps}
     >
-      <div className="mb-4 flex items-center gap-2">
-        <div className="h-4 w-1 rounded-full bg-blue-400" />
-        <h3 className="font-semibold">{tableTitle}</h3>
+      <div className="mb-4 flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <div className="h-4 w-1 rounded-full bg-blue-400" />
+          <h3 className="font-semibold">{tableTitle}</h3>
+        </div>
+
+        {onAddNewRow && (
+          <Button onClick={onAddNewRow} variant="outline" size="sm">
+            <Plus />
+            Add New
+          </Button>
+        )}
       </div>
 
       <div className="overflow-x-auto text-sm">

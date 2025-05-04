@@ -13,6 +13,34 @@ import { useEffect, useMemo, useState } from "react";
 import { portActivityColumns } from "@/consts/port-activity-columns";
 import { usePersistentState } from "@/hooks/use-persistent-state";
 import { UpdateDataProps } from "@/utils/get-select-column";
+import { LayTime, PortActivity, PortActivityType } from "@/interfaces/lay-time";
+import { formatDateAndTime } from "@/utils/format-date-and-time";
+
+const addEmptyPortActivityItem = (
+  oldLayTimes: LayTime[],
+  selectedLayTime: LayTime | undefined,
+) =>
+  oldLayTimes.map((oldLayTime) => {
+    if (oldLayTime.id === selectedLayTime?.id) {
+      const addedAt = formatDateAndTime(new Date().toISOString());
+      const updatedItems: PortActivity[] = [
+        ...oldLayTime.items,
+        {
+          id: oldLayTime.items.length,
+          activityType: PortActivityType.Unknown,
+          fromDateAndTime:
+            oldLayTime.items[oldLayTime.items.length - 1].fromDateAndTime,
+          percentage: 0,
+          remarks: `Added at ${addedAt.date}, ${addedAt.time}`,
+        },
+      ];
+      return {
+        ...oldLayTime,
+        items: updatedItems,
+      };
+    }
+    return oldLayTime;
+  });
 
 export default function Home() {
   const [layTimes, setLayTimes] = usePersistentState(
@@ -59,6 +87,11 @@ export default function Home() {
 
       <Table
         tableTitle="Port Activity"
+        onAddNewRow={() =>
+          setLayTimes((oldLayTimes) =>
+            addEmptyPortActivityItem(oldLayTimes, selectedLayTime),
+          )
+        }
         options={{
           columns: portActivityColumns,
           data: selectedLayTime?.items ?? [],
