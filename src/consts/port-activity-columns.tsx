@@ -6,6 +6,7 @@ import { CellContext, ColumnDef } from "@tanstack/react-table";
 import { getTimeDiffColumn, TimeDiff } from "@/utils/get-time-diff-column";
 import { applyPercentageToTimeDiff } from "@/utils/apply-percentage-to-time-diff";
 import { formatTimeDiff } from "@/utils/format-time-diff";
+import { ActionsCell } from "@/components/actions-cell";
 
 const getCurrentAndNextRowsValues: (
   cellContext: CellContext<PortActivity, unknown>,
@@ -83,5 +84,9 @@ export const portActivityColumns: ColumnDef<PortActivity>[] = [
         cellContext.row.original.percentage,
       );
     },
+  },
+  {
+    id: "actions",
+    cell: ActionsCell,
   },
 ];
