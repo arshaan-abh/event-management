@@ -15,6 +15,7 @@ import { usePersistentState } from "@/hooks/use-persistent-state";
 import { UpdateDataProps } from "@/utils/get-select-column";
 import { LayTime, PortActivity, PortActivityType } from "@/interfaces/lay-time";
 import { formatDateAndTime } from "@/utils/format-date-and-time";
+import { DeleteDataProps } from "@/components/actions-cell";
 
 const addEmptyPortActivityItem = (
   oldLayTimes: LayTime[],
@@ -111,6 +112,21 @@ export default function Home() {
                       index === rowIndex
                         ? { ...item, [columnId]: value }
                         : item,
+                    );
+                    return {
+                      ...oldLayTime,
+                      items: updatedItems,
+                    };
+                  }
+                  return oldLayTime;
+                }),
+              ),
+            deleteData: ({ rowIndex }: DeleteDataProps) =>
+              setLayTimes((oldLayTimes) =>
+                oldLayTimes.map((oldLayTime) => {
+                  if (oldLayTime.id === selectedLayTime?.id) {
+                    const updatedItems = oldLayTime.items.filter(
+                      (_, index) => index !== rowIndex,
                     );
                     return {
                       ...oldLayTime,

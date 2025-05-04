@@ -2,9 +2,22 @@ import { Popover, PopoverContent, PopoverTrigger } from "./shadcn/popover";
 import { Files, Trash, CircleAlert } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./shadcn/button";
+import { RowData, CellContext } from "@tanstack/react-table";
 
-export const ActionsCell = () => {
+export interface DeleteDataProps {
+  rowIndex: number;
+}
+
+export const ActionsCell = <TData extends RowData>({
+  row,
+  table,
+}: CellContext<TData, unknown>) => {
   const [popoverOpen, setPopoverOpen] = useState(false);
+
+  const meta = table.options.meta as {
+    deleteData: (props: DeleteDataProps) => void;
+  };
+
   return (
     <div className="flex size-full items-center justify-end">
       <Button variant="ghost" size="sm">
@@ -36,7 +49,14 @@ export const ActionsCell = () => {
             >
               Cancel
             </Button>
-            <Button variant="default" size="sm">
+            <Button
+              onClick={() => {
+                meta.deleteData({ rowIndex: row.index });
+                setPopoverOpen(false);
+              }}
+              variant="default"
+              size="sm"
+            >
               OK
             </Button>
           </div>
