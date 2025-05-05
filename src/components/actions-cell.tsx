@@ -5,6 +5,7 @@ import { RowData, CellContext } from "@tanstack/react-table";
 import { PortActivityMeta } from "@/interfaces/port-activity-meta";
 import { CustomPopover } from "./custom-popover";
 import { getCurrentRowIndex } from "@/utils/get-current-row-index";
+import { cn } from "@/utils/cn";
 
 export const ActionsCell = <TData extends RowData>({
   row,
@@ -36,7 +37,14 @@ export const ActionsCell = <TData extends RowData>({
             meta.swapData({ rowIndex1: row.index, rowIndex2: swapWith })
           }
         >
-          <Button variant="ghost" size="sm">
+          <Button
+            variant="ghost"
+            size="sm"
+            className={cn(
+              "h-6 !px-1",
+              swapWith !== undefined && "hover:bg-red-100",
+            )}
+          >
             <AlertCircle size={16} />
           </Button>
         </CustomPopover>
@@ -46,6 +54,10 @@ export const ActionsCell = <TData extends RowData>({
         onClick={() => meta.copyData({ rowIndex: row.index })}
         variant="ghost"
         size="sm"
+        className={cn(
+          "h-6 !px-1",
+          swapWith !== undefined && "hover:bg-red-100",
+        )}
       >
         <Files size={16} />
       </Button>
@@ -56,7 +68,14 @@ export const ActionsCell = <TData extends RowData>({
         setOpen={setDeletePopoverOpen}
         onConfirm={() => meta.deleteData({ rowIndex: row.index })}
       >
-        <Button variant="ghost" size="sm">
+        <Button
+          variant="ghost"
+          size="sm"
+          className={cn(
+            "h-6 !px-1",
+            swapWith !== undefined && "hover:bg-red-100",
+          )}
+        >
           <Trash size={16} />
         </Button>
       </CustomPopover>
