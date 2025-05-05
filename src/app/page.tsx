@@ -17,31 +17,43 @@ import { LayTime, PortActivity, PortActivityType } from "@/interfaces/lay-time";
 import { formatDateAndTime } from "@/utils/format-date-and-time";
 import { CopyDataProps, DeleteDataProps } from "@/components/actions-cell";
 
-const addEmptyPortActivityItem = (
+const updateSelectedLayTimesItems = (
   oldLayTimes: LayTime[],
-  selectedLayTime: LayTime | undefined,
+  selectedLayTimesId: number | undefined,
+  generateItems: (oldLayTimesItems: PortActivity[]) => PortActivity[],
 ) =>
   oldLayTimes.map((oldLayTime) => {
-    if (oldLayTime.id === selectedLayTime?.id) {
-      const addedAt = formatDateAndTime(new Date().toISOString());
-      const updatedItems: PortActivity[] = [
-        ...oldLayTime.items,
-        {
-          id: oldLayTime.items.length,
-          activityType: PortActivityType.Unknown,
-          fromDateAndTime:
-            oldLayTime.items[oldLayTime.items.length - 1].fromDateAndTime,
-          percentage: 0,
-          remarks: `Added at ${addedAt.date}, ${addedAt.time}`,
-        },
-      ];
+    if (oldLayTime.id === selectedLayTimesId) {
       return {
         ...oldLayTime,
-        items: updatedItems,
+        items: generateItems(oldLayTime.items),
       };
     }
     return oldLayTime;
   });
+
+const addEmptyPortActivityItem = (
+  oldLayTimes: LayTime[],
+  selectedLayTime: LayTime | undefined,
+) =>
+  updateSelectedLayTimesItems(
+    oldLayTimes,
+    selectedLayTime?.id,
+    (oldLayTimesItems) => {
+      const addedAt = formatDateAndTime(new Date().toISOString());
+      return [
+        ...oldLayTimesItems,
+        {
+          id: oldLayTimesItems.length,
+          activityType: PortActivityType.Unknown,
+          fromDateAndTime:
+            oldLayTimesItems[oldLayTimesItems.length - 1].fromDateAndTime,
+          percentage: 0,
+          remarks: `Added at ${addedAt.date}, ${addedAt.time}`,
+        },
+      ];
+    },
+  );
 
 export default function Home() {
   const [layTimes, setLayTimes] = usePersistentState(
@@ -106,64 +118,49 @@ export default function Home() {
           meta: {
             updateData: ({ rowIndex, columnId, value }: UpdateDataProps) =>
               setLayTimes((oldLayTimes) =>
-                oldLayTimes.map((oldLayTime) => {
-                  if (oldLayTime.id === selectedLayTime?.id) {
-                    const updatedItems = oldLayTime.items.map((item, index) =>
+                updateSelectedLayTimesItems(
+                  oldLayTimes,
+                  selectedLayTime?.id,
+                  (oldLayTimesItems) =>
+                    oldLayTimesItems.map((item, index) =>
                       index === rowIndex
                         ? { ...item, [columnId]: value }
                         : item,
-                    );
-                    return {
-                      ...oldLayTime,
-                      items: updatedItems,
-                    };
-                  }
-                  return oldLayTime;
-                }),
+                    ),
+                ),
               ),
             copyData: ({ rowIndex }: CopyDataProps) =>
               setLayTimes((oldLayTimes) =>
-                oldLayTimes.map((oldLayTime) => {
-                  if (oldLayTime.id === selectedLayTime?.id) {
-                    const itemToCopy = oldLayTime.items[rowIndex];
-                    if (!itemToCopy) return oldLayTime;
+                updateSelectedLayTimesItems(
+                  oldLayTimes,
+                  selectedLayTime?.id,
+                  (oldLayTimesItems) => {
+                    const itemToCopy = oldLayTimesItems[rowIndex];
 
                     const copiedItem = {
                       ...itemToCopy,
                       remarks: `${itemToCopy.remarks} (Copied)`,
                     };
 
-                    const updatedItems = [
-                      ...oldLayTime.items.slice(0, rowIndex + 1),
+                    return [
+                      ...oldLayTimesItems.slice(0, rowIndex + 1),
                       copiedItem,
-                      ...oldLayTime.items.slice(rowIndex + 1),
+                      ...oldLayTimesItems.slice(rowIndex + 1),
                     ].map((item, index) => ({
                       ...item,
                       id: index,
                     }));
-
-                    return {
-                      ...oldLayTime,
-                      items: updatedItems,
-                    };
-                  }
-                  return oldLayTime;
-                }),
+                  },
+                ),
               ),
             deleteData: ({ rowIndex }: DeleteDataProps) =>
               setLayTimes((oldLayTimes) =>
-                oldLayTimes.map((oldLayTime) => {
-                  if (oldLayTime.id === selectedLayTime?.id) {
-                    const updatedItems = oldLayTime.items.filter(
-                      (_, index) => index !== rowIndex,
-                    );
-                    return {
-                      ...oldLayTime,
-                      items: updatedItems,
-                    };
-                  }
-                  return oldLayTime;
-                }),
+                updateSelectedLayTimesItems(
+                  oldLayTimes,
+                  selectedLayTime?.id,
+                  (oldLayTimesItems) =>
+                    oldLayTimesItems.filter((_, index) => index !== rowIndex),
+                ),
               ),
           },
         }}
