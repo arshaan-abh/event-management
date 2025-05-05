@@ -3,13 +3,8 @@
 import { layTimeColumns } from "@/consts/lay-time-columns";
 import { Table } from "@/components/table";
 import { layTimes as initialLayTimes } from "@/consts/lay-times";
-import {
-  getCoreRowModel,
-  getSortedRowModel,
-  RowSelectionState,
-  SortingState,
-} from "@tanstack/react-table";
-import { useEffect, useMemo, useState } from "react";
+import { getCoreRowModel, RowSelectionState } from "@tanstack/react-table";
+import { useMemo, useState } from "react";
 import { portActivityColumns } from "@/consts/port-activity-columns";
 import { usePersistentState } from "@/hooks/use-persistent-state";
 import { UpdateDataProps } from "@/utils/get-select-column";
@@ -73,14 +68,6 @@ export default function Home() {
     [layTimes, layTimesRowSelection],
   );
 
-  const [portActivitySorting, portActivitySetSorting] = useState<SortingState>([
-    { id: "fromDateAndTime", desc: true },
-  ]);
-
-  useEffect(() => {
-    portActivitySetSorting([{ id: "fromDateAndTime", desc: true }]);
-  }, [layTimes, portActivitySetSorting]);
-
   return (
     <div className="flex flex-col gap-4 p-4">
       <Table
@@ -109,11 +96,6 @@ export default function Home() {
           columns: portActivityColumns,
           data: selectedLayTime?.items ?? [],
           getCoreRowModel: getCoreRowModel(),
-          getSortedRowModel: getSortedRowModel(),
-          onSortingChange: portActivitySetSorting,
-          state: {
-            sorting: portActivitySorting,
-          },
           enableRowSelection: false,
           meta: {
             updateData: ({ rowIndex, columnId, value }: UpdateDataProps) =>
