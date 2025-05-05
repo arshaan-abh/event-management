@@ -1,12 +1,7 @@
 import { ColumnDef, RowData } from "@tanstack/react-table";
 import { SelectCell } from "@/components/select-cell";
 import { ReactNode } from "react";
-
-export interface UpdateDataProps {
-  rowIndex: number;
-  columnId: string;
-  value: unknown;
-}
+import { PortActivityMeta } from "@/interfaces/port-activity-meta";
 
 export const getSelectColumn: <TData extends RowData>(
   props: {
@@ -23,9 +18,7 @@ export const getSelectColumn: <TData extends RowData>(
 }) => ({
   cell: ({ row, column, table }) => {
     const value = generateValue(row.original);
-    const meta = table.options.meta as {
-      updateData: (props: UpdateDataProps) => void;
-    };
+    const meta = table.options.meta as PortActivityMeta;
     return (
       <SelectCell
         value={value}

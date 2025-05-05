@@ -21,9 +21,9 @@ export const formatTimeDiff = (
   const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
 
   // Format the output with leading zeros
-  const formattedDays = String(days).padStart(2, "0");
-  const formattedHours = String(hours).padStart(2, "0");
-  const formattedMinutes = String(minutes).padStart(2, "0");
+  const formattedDays = String(Math.abs(days)).padStart(2, "0");
+  const formattedHours = String(Math.abs(hours)).padStart(2, "0");
+  const formattedMinutes = String(Math.abs(minutes)).padStart(2, "0");
 
   return `${formattedDays}d ${formattedHours}:${formattedMinutes}`;
 };

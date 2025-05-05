@@ -7,10 +7,11 @@ import { getCoreRowModel, RowSelectionState } from "@tanstack/react-table";
 import { useMemo, useState } from "react";
 import { portActivityColumns } from "@/consts/port-activity-columns";
 import { usePersistentState } from "@/hooks/use-persistent-state";
-import { UpdateDataProps } from "@/utils/get-select-column";
 import { LayTime, PortActivity, PortActivityType } from "@/interfaces/lay-time";
 import { formatDateAndTime } from "@/utils/format-date-and-time";
-import { CopyDataProps, DeleteDataProps } from "@/components/actions-cell";
+import { getSortingSteps, shouldBeSorted } from "@/utils/sort-port-activity";
+import { cn } from "@/utils/cn";
+import { PortActivityMeta } from "@/interfaces/port-activity-meta";
 
 const updateSelectedLayTimesItems = (
   oldLayTimes: LayTime[],
@@ -68,6 +69,11 @@ export default function Home() {
     [layTimes, layTimesRowSelection],
   );
 
+  const sortingSteps = useMemo(
+    () => getSortingSteps(selectedLayTime?.items ?? []),
+    [selectedLayTime],
+  );
+
   return (
     <div className="flex flex-col gap-4 p-4">
       <Table
@@ -92,13 +98,37 @@ export default function Home() {
             addEmptyPortActivityItem(oldLayTimes, selectedLayTime),
           )
         }
+        generateRowProps={(row, table) => ({
+          className: cn(
+            shouldBeSorted(row, table, sortingSteps) && "bg-red-50",
+          ),
+        })}
         options={{
           columns: portActivityColumns,
           data: selectedLayTime?.items ?? [],
           getCoreRowModel: getCoreRowModel(),
           enableRowSelection: false,
           meta: {
-            updateData: ({ rowIndex, columnId, value }: UpdateDataProps) =>
+            sortingSteps,
+            swapData: ({ rowIndex1, rowIndex2 }) => {
+              setLayTimes((oldLayTimes) =>
+                updateSelectedLayTimesItems(
+                  oldLayTimes,
+                  selectedLayTime?.id,
+                  (oldLayTimesItems) => {
+                    // Swap the two items in the array
+                    const newItems = [...oldLayTimesItems];
+                    const temp = newItems[rowIndex1];
+                    newItems[rowIndex1] = newItems[rowIndex2];
+                    newItems[rowIndex2] = temp;
+
+                    // Return the updated items list
+                    return newItems;
+                  },
+                ),
+              );
+            },
+            updateData: ({ rowIndex, columnId, value }) =>
               setLayTimes((oldLayTimes) =>
                 updateSelectedLayTimesItems(
                   oldLayTimes,
@@ -111,7 +141,7 @@ export default function Home() {
                     ),
                 ),
               ),
-            copyData: ({ rowIndex }: CopyDataProps) =>
+            copyData: ({ rowIndex }) =>
               setLayTimes((oldLayTimes) =>
                 updateSelectedLayTimesItems(
                   oldLayTimes,
@@ -135,7 +165,7 @@ export default function Home() {
                   },
                 ),
               ),
-            deleteData: ({ rowIndex }: DeleteDataProps) =>
+            deleteData: ({ rowIndex }) =>
               setLayTimes((oldLayTimes) =>
                 updateSelectedLayTimesItems(
                   oldLayTimes,
@@ -144,7 +174,7 @@ export default function Home() {
                     oldLayTimesItems.filter((_, index) => index !== rowIndex),
                 ),
               ),
-          },
+          } satisfies PortActivityMeta,
         }}
       />
     </div>

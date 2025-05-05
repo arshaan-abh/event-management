@@ -2,17 +2,20 @@ import { PortActivity, PortActivityType } from "@/interfaces/lay-time";
 import { formatDateAndTime } from "@/utils/format-date-and-time";
 import { getSelectColumn } from "@/utils/get-select-column";
 import { getDateAndTimeColumn } from "@/utils/get-date-and-time-column";
-import { CellContext, ColumnDef } from "@tanstack/react-table";
 import { getTimeDiffColumn, TimeDiff } from "@/utils/get-time-diff-column";
 import { applyPercentageToTimeDiff } from "@/utils/apply-percentage-to-time-diff";
 import { formatTimeDiff } from "@/utils/format-time-diff";
 import { ActionsCell } from "@/components/actions-cell";
+import { CellContext, ColumnDef } from "@tanstack/react-table";
+import { getCurrentRowIndex } from "@/utils/get-current-row-index";
 
 const getCurrentAndNextRowsValues: (
   cellContext: CellContext<PortActivity, unknown>,
 ) => { currentValue: string; nextValue: string } = ({ row, table }) => {
-  const sortedRows = table.getRowModel().rows;
-  const currentRowIndex = sortedRows.findIndex((r) => r.id === row.id);
+  const { currentRowIndex, sortedRows } = getCurrentRowIndex({
+    row,
+    table,
+  });
   const nextRow = sortedRows[currentRowIndex + 1];
   const nextValue = nextRow?.original?.fromDateAndTime;
   const currentValue = row.original.fromDateAndTime;

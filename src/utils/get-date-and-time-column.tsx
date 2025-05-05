@@ -2,7 +2,7 @@ import { CellContext, ColumnDef, RowData } from "@tanstack/react-table";
 import { formatDateAndTime } from "./format-date-and-time";
 import { DateAndTimeCell } from "@/components/date-and-time-cell";
 import { DateAndTimePicker } from "@/components/shadcn/date-and-time-picker";
-import { UpdateDataProps } from "./get-select-column";
+import { PortActivityMeta } from "@/interfaces/port-activity-meta";
 
 export interface DateAndTime {
   date: string;
@@ -41,9 +41,7 @@ export const getDateAndTimeColumn: GetDateAndTimeColumnProps = ({
       table,
       ...celContext,
     });
-    const meta = table.options.meta as {
-      updateData: (props: UpdateDataProps) => void;
-    };
+    const meta = table.options.meta as PortActivityMeta;
     if (editable)
       return (
         <DateAndTimePicker

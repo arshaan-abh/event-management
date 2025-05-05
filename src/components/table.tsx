@@ -5,6 +5,8 @@ import {
   RowData,
   TableOptions,
   flexRender,
+  Row,
+  Table as TableType,
 } from "@tanstack/react-table";
 import { Inbox, Plus } from "lucide-react";
 import { Button } from "./shadcn/button";
@@ -13,12 +15,17 @@ interface TableProps<TData extends RowData> extends ComponentProps<"div"> {
   tableTitle: string;
   options: TableOptions<TData>;
   onAddNewRow?: () => void;
+  generateRowProps?: (
+    row: Row<TData>,
+    table: TableType<TData>,
+  ) => ComponentProps<"tr">;
 }
 
 export const Table = <TData extends RowData>({
   tableTitle,
   options,
   onAddNewRow,
+  generateRowProps,
 
   className,
   ...otherProps
@@ -78,25 +85,37 @@ export const Table = <TData extends RowData>({
           </thead>
 
           <tbody>
-            {table.getRowModel().rows.map((row) => (
-              <tr
-                key={row.id}
-                onClick={row.getToggleSelectedHandler()}
-                className={cn(
-                  row.getIsSelected() && "bg-indigo-50",
-                  row.getCanSelect() && "cursor-pointer",
-                )}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <td
-                    key={cell.id}
-                    className="h-[2.375rem] truncate border-b-2 border-zinc-100 px-4"
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))}
+            {table.getRowModel().rows.map((row) => {
+              const { className, onClick, ...generatedRowProps } =
+                generateRowProps?.(row, table) ?? {};
+              return (
+                <tr
+                  key={row.id}
+                  onClick={(e) => {
+                    row.getToggleSelectedHandler()(row);
+                    onClick?.(e);
+                  }}
+                  className={cn(
+                    row.getIsSelected() && "bg-indigo-50",
+                    row.getCanSelect() && "cursor-pointer",
+                    className,
+                  )}
+                  {...generatedRowProps}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <td
+                      key={cell.id}
+                      className="h-[2.375rem] truncate border-b-2 border-zinc-100 px-4"
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              );
+            })}
 
             {table.getRowModel().rows.length === 0 && (
               <tr>
