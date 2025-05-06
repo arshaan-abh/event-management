@@ -12,6 +12,7 @@ import { formatDateAndTime } from "@/utils/format-date-and-time";
 import { getSortingSteps, shouldBeSorted } from "@/utils/sort-port-activity";
 import { cn } from "@/utils/cn";
 import { PortActivityMeta } from "@/interfaces/port-activity-meta";
+import { swapImmutable } from "@/utils/swap-immutable";
 
 const updateSelectedLayTimesItems = (
   oldLayTimes: LayTime[],
@@ -118,11 +119,14 @@ export default function Home() {
                   (oldLayTimesItems) => {
                     // Swap the two items in the array
                     const newItems = [...oldLayTimesItems];
-                    const temp = newItems[rowIndex1];
-                    newItems[rowIndex1] = newItems[rowIndex2];
-                    newItems[rowIndex2] = temp;
 
-                    // Return the updated items list
+                    if (rowIndex1 < rowIndex2)
+                      for (let i = rowIndex1; i < rowIndex2; i++)
+                        return swapImmutable(newItems, i, i + 1);
+                    else if (rowIndex1 > rowIndex2)
+                      for (let i = rowIndex1; i > rowIndex2; i--)
+                        return swapImmutable(newItems, i, i - 1);
+
                     return newItems;
                   },
                 ),
