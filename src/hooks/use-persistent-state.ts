@@ -5,6 +5,7 @@ export const usePersistentState = <T>(key: string, initialData: T) => {
   const [hasMounted, setHasMounted] = useState(false);
 
   useEffect(() => {
+    // TODO this probably causes the production error
     if (typeof window === "undefined") return; // skip on server
 
     const stored = localStorage.getItem(key);
